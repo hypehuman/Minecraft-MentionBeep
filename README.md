@@ -22,7 +22,7 @@ There may be easier ways, but this is how I do it:
 1. Install Eclipse: <https://www.eclipse.org/downloads/>
 2. Add M2Eclipse to Eclipse: <http://www.eclipse.org/m2e/>
 3. Load the directory 'Minecraft-MentionBeep/MentionBeep' as a project in Eclipse.
-4. In the Goals textbox, type '''package shade:shade'''
+4. In the Goals textbox, type ```package shade:shade```
 5. Click the Run button
-6. Once the build succeeds, copy the file 'Minecraft-MentionBeep/MentionBeep/target/MentionBeep-1.jar' to the 'Plugins' subdirectory of your Spigot server
+6. Once the build succeeds, copy the file 'Minecraft-MentionBeep/MentionBeep/target/MentionBeep-X.jar' (where X is the version number) to the 'Plugins' subdirectory of your Spigot server
 7. Start (or re-start) your server
