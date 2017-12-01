@@ -48,7 +48,7 @@ public class PlayerSettings {
 	}
 	
 	public String getNameUsedByThisPlugin() {
-		return player.getDisplayName();
+		return player.getName();
 	}
 	
 	// Returns a case-insensitive set containing every substring of the player's name that has MIN_AUTO_NICK_LENGTH or more characters
