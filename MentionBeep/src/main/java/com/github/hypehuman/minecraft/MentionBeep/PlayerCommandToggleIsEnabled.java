@@ -2,7 +2,7 @@ package com.github.hypehuman.minecraft.MentionBeep;
 
 import java.util.List;
 
-public class SubCommandToggleIsEnabled implements ISubCommand {
+public class PlayerCommandToggleIsEnabled extends PlayerCommand {
 
 	@Override
 	public String[] getNames() {

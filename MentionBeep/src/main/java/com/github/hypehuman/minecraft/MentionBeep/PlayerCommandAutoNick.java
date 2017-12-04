@@ -2,10 +2,13 @@ package com.github.hypehuman.minecraft.MentionBeep;
 
 import java.util.List;
 
-public class SubCommandAutoNick implements ISubCommand {
+public class PlayerCommandAutoNick extends PlayerCommand {
 	@Override
 	public String[] getNames() {
-		return new String[]{"autoNick"};
+		return new String[]{
+			"autoNick",
+			"a",
+		};
 	}
 
 	@Override
