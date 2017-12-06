@@ -4,5 +4,5 @@ version: ${project.version}
 commands:
   MentionBeep:
     description: ${project.description}
-    usage: To get help, run /MentionBeep or /mb without any arguments. The sender must be an online player.
+    usage: To get help, run /MentionBeep or /mb without any arguments. The sender must be an online player or the server console.
     aliases: [mb]

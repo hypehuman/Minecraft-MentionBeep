@@ -26,17 +26,18 @@ public abstract class SubCommandCollection<TSender extends CommandSender, TSubCo
 	}
 
 	public void onCommand(PluginMentionBeep plugin, TSender sender, Command cmd, String label, String[] args) {
-    	String subCommandName = args[0];
-    	List<String> remainingArgs = Arrays.stream(args).skip(1).collect(Collectors.toList());
+		if (args.length != 0) {
+	    	String subCommandName = args[0];
+	    	List<String> remainingArgs = Arrays.stream(args).skip(1).collect(Collectors.toList());
+	    	TSubCommand subCommand = byName.getOrDefault(subCommandName, null);
+	    	if (subCommand != null) {
+	        	execute(subCommand, plugin, sender, remainingArgs);
+	        	return;
+	    	}
+		}
 
-    	TSubCommand subCommand = byName.getOrDefault(subCommandName, null);
-    	if (subCommand == null) {
-        	ArrayList<String> helpList = getHelp(plugin, sender, cmd);
-        	sender.sendMessage(helpList.toArray(new String[helpList.size()]));
-        	return;
-    	}
-    	
-    	execute(subCommand, plugin, sender, remainingArgs);
+    	ArrayList<String> helpList = getHelp(plugin, sender, cmd);
+    	sender.sendMessage(helpList.toArray(new String[helpList.size()]));
 	}
 	
 	abstract void execute(TSubCommand subCommand, PluginMentionBeep plugin, TSender sender, List<String> args);
