@@ -26,4 +26,9 @@ public class PlayerCommandCollection extends SubCommandCollection<Player, Player
         PlayerSettings playerSettings = plugin.playerManager.getSettings(sender);
         return plugin.getDescription().getName() + " is " + playerSettings.getIsEnabledAdjective();
 	}
+
+	@Override
+	String getCommandPrefix() {
+		return "/";
+	}
 }

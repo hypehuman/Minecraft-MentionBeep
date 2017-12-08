@@ -1,16 +1,16 @@
 package com.github.hypehuman.minecraft.MentionBeep;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PlayerCommandToggleIsEnabled implements PlayerCommand {
 
 	@Override
-	public String[] getNames() {
-		return new String[] {
+	public List<String> getNames() {
+		return Arrays.asList(
 			"toggle",
 			"t"
-		};
+		);
 	}
 
 	@Override

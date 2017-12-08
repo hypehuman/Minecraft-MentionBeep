@@ -22,4 +22,9 @@ public class ServerCommandCollection extends SubCommandCollection<ConsoleCommand
 	String getBaseCommandHelp(PluginMentionBeep plugin, ConsoleCommandSender sender) {
 		return "";
 	}
+
+	@Override
+	String getCommandPrefix() {
+		return "";
+	}
 }

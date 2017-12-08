@@ -36,27 +36,32 @@ public abstract class SubCommandCollection<TSender extends CommandSender, TSubCo
 	    	}
 		}
 
-    	ArrayList<String> helpList = getHelp(plugin, sender, cmd);
+		List<String> helpList = getHelp(plugin, sender, cmd);
     	sender.sendMessage(helpList.toArray(new String[helpList.size()]));
 	}
 	
 	abstract void execute(TSubCommand subCommand, PluginMentionBeep plugin, TSender sender, List<String> args);
 	
-	ArrayList<String> getHelp(PluginMentionBeep plugin, TSender sender, Command cmd) {
-		StringJoiner baseCmdJoiner = new StringJoiner("", " /", "");
-		baseCmdJoiner.add(cmd.getName());
-		cmd.getAliases().stream().forEach(baseCmdJoiner::add);
-		ArrayList<String> result = new ArrayList<String>();
-		result.add("Aliases (all commands are case-insensitive):" + baseCmdJoiner.toString());
+	List<String> getHelp(PluginMentionBeep plugin, TSender sender, Command cmd) {
+		List<String> result = new ArrayList<String>();
+		
+		List<String> baseCmdNames = new ArrayList<String>();
+		baseCmdNames.add(cmd.getName());
+		baseCmdNames.addAll(cmd.getAliases());
+		String baseCommandStr = baseCmdNames.stream().map(x -> getCommandPrefix() + x).collect(Collectors.joining(" "));
+		result.add("Aliases (all commands are case-insensitive): " + baseCommandStr);
+		
 		result.add("    " + getBaseCommandHelp(plugin, sender));
+		
 		for (TSubCommand sc : subCommands) {
-			StringJoiner subCmdJoiner = new StringJoiner("", "/" + cmd.getName() + " ", "");
-			Arrays.stream(sc.getNames()).forEach(subCmdJoiner::add);
-			result.add(subCmdJoiner.toString());
+			String subCommandStr = sc.getNames().stream().map(x -> getCommandPrefix() + cmd.getName() + " " + x).collect(Collectors.joining(" "));
+			result.add(subCommandStr);
+			
 			result.add("    " + sc.getHelp());
 		}
 		return result;
 	}
 
 	abstract String getBaseCommandHelp(PluginMentionBeep plugin, TSender sender);
+	abstract String getCommandPrefix();
 }

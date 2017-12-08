@@ -1,7 +1,5 @@
 package com.github.hypehuman.minecraft.MentionBeep;
 
-import java.util.logging.Level;
-
 import org.bukkit.command.*;
 import org.bukkit.entity.*;
 

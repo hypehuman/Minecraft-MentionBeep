@@ -1,8 +1,8 @@
 package com.github.hypehuman.minecraft.MentionBeep;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface SubCommand {
-	String[] getNames();
+	List<String> getNames();
 	String getHelp();
 }

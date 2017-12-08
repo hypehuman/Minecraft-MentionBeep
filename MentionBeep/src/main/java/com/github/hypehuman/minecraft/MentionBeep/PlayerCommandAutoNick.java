@@ -1,15 +1,16 @@
 package com.github.hypehuman.minecraft.MentionBeep;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class PlayerCommandAutoNick implements PlayerCommand {
 	
 	@Override
-	public String[] getNames() {
-		return new String[]{
+	public List<String> getNames() {
+		return Arrays.asList(
 			"autoNick",
-			"an",
-		};
+			"an"
+		);
 	}
 
 	@Override
@@ -35,7 +36,7 @@ public class PlayerCommandAutoNick implements PlayerCommand {
 			: playerSettings.plugin.getName() + ": Automatic nickname generation is disabled. Only your full name will trigger a beep."
 		);
 		if (report) {
-			playerSettings.player.sendMessage("To change this setting, use /" + playerSettings.plugin.getDescription().getName() + " " + getNames()[0] + " toggle");
+			playerSettings.player.sendMessage("To change this setting, use /" + playerSettings.plugin.getDescription().getName() + " " + getNames().get(0) + " toggle");
 		}
 	}
 }
