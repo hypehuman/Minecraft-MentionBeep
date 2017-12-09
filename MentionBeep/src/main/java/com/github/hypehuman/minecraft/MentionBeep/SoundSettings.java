@@ -3,19 +3,30 @@ package com.github.hypehuman.minecraft.MentionBeep;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.json.simple.*;
-import org.json.simple.parser.*;
 
 public abstract class SoundSettings {
 	Sound sound;
 	float volume;
 	float pitch;
 	
-	public SoundSettings(JSONObj jsonObj) {
+	public SoundSettings(JSONObject jsonObj) {
 		deserialize(jsonObj);
 	}
 	
 	public void play(Player player) {
 		player.playSound(player.getLocation(), sound, volume, pitch);
+	}
+	
+	private boolean setSound(Object input) {
+		Sound parsed;
+		try {
+			parsed = Sound.valueOf((String)input);
+		}
+		catch (Exception ex) {
+			return false;
+		}
+		sound = parsed;
+		return true;
 	}
 
 	private static final String SoundTag = "Sound";
@@ -31,10 +42,7 @@ public abstract class SoundSettings {
 	}
 	
 	private JSONObject deserialize(JSONObject jsonObj) {
-		setSound()
-	}
-	
-	abstract void save() {
+		setSound(jsonObj.getOrDefault(SoundTag, null));
 		
 	}
 }
