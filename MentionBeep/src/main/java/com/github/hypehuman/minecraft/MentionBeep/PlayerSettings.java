@@ -4,7 +4,6 @@ import java.util.*;
 import java.util.logging.Level;
 
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.json.simple.*;
 import org.json.simple.parser.*;
@@ -12,8 +11,9 @@ import org.json.simple.parser.*;
 public class PlayerSettings {
 	public final PluginMentionBeep plugin;
 	public final Player player;
-	private boolean IsEnabled = true;
-	private boolean AutoGenerateNicknames = true;
+	private boolean isEnabled = true;
+	private boolean autoGenerateNicknames = true;
+	private SoundSettings customSound = null;
 	
 	public PlayerSettings(PluginMentionBeep aPlugin, Player aPlayer) {
 		plugin = aPlugin;
@@ -30,20 +30,20 @@ public class PlayerSettings {
 	}
 
 	public boolean getIsEnabled() {
-		return IsEnabled;
+		return isEnabled;
 	}
 	
 	public void setIsEnabled(boolean value) {
-		IsEnabled = value;
+		isEnabled = value;
 		Save();
 	}
 	
 	public boolean getAutoGenerateNicknames() {
-		return AutoGenerateNicknames;
+		return autoGenerateNicknames;
 	}
 	
 	public void setAutoGenerateNicknames(boolean value) {
-		AutoGenerateNicknames = value;
+		autoGenerateNicknames = value;
 		Save();
 	}
 	
@@ -57,7 +57,7 @@ public class PlayerSettings {
 		CaseInsensitiveMap<String, Object> result = new CaseInsensitiveMap<String, Object>(); // the values are irrelevant
 		String name = getNameUsedByThisPlugin();
 		result.put(name, null);
-		if (AutoGenerateNicknames)
+		if (autoGenerateNicknames)
 		{
 			for (int i = 0; i <= name.length() - PluginMentionBeep.MIN_AUTO_NICK_LENGTH; i++) {
 				for (int j = i + PluginMentionBeep.MIN_AUTO_NICK_LENGTH; j <= name.length(); j++) {
@@ -77,9 +77,12 @@ public class PlayerSettings {
 		if (!possibleMentions.parallelStream().anyMatch(pm -> names.contains(pm))) {
 			return;
 		}
-		
-		// TODO: Make these last three arguments user-configurable
-		player.playSound(player.getLocation(), Sound.ENTITY_GHAST_SCREAM, 1, 1);
+
+		SoundSettings soundToPlay =
+			customSound != null ? customSound : // Custom sound defined by player
+		    // TODO: Serverwide default sound
+			new SoundSettings(); // Plugin default sound
+		soundToPlay.play(player);
 	}
 	
 	public String getIsEnabledAdjective() {
@@ -93,12 +96,16 @@ public class PlayerSettings {
 	private static final String PluginVersionTag = "PluginVersion";
 	private static final String IsEnabledTag = "IsEnabled";
 	private static final String AutoGenerateNicknamesTag = "AutoGenerateNicknames";
+	private static final String CustomSoundTag = "CustomSound";
 
 	private void Save() {
         JSONObject jsonObj = new JSONObject();
         jsonObj.put(PluginVersionTag, plugin.getDescription().getVersion()); // just in case future versions need it
-        jsonObj.put(IsEnabledTag, IsEnabled);
-        jsonObj.put(AutoGenerateNicknamesTag, AutoGenerateNicknames);
+        jsonObj.put(IsEnabledTag, isEnabled);
+        jsonObj.put(AutoGenerateNicknamesTag, autoGenerateNicknames);
+        if (customSound != null) {
+        	jsonObj.put(CustomSoundTag, customSound.serialize());
+        }
         String jsonStr = jsonObj.toJSONString();
 		try {
 	        plugin.getConfig().set(getConfigPath(), jsonStr);
@@ -122,14 +129,19 @@ public class PlayerSettings {
 			if (ieObj != null)
 			{
 				// if a value is there, it had better be a boolean
-				IsEnabled = (boolean)ieObj;
+				isEnabled = (boolean)ieObj;
 			} // if null, keep the default value
 			Object agnObj = jsonObj.getOrDefault(AutoGenerateNicknamesTag, null);
 			if (agnObj != null)
 			{
 				// if a value is there, it had better be a boolean
-				AutoGenerateNicknames = (boolean)agnObj;
+				autoGenerateNicknames = (boolean)agnObj;
 			} // if null, keep the default value
+			Object soundObj = jsonObj.getOrDefault(CustomSoundTag, null);
+			if (soundObj != null)
+			{
+				customSound = new SoundSettings((JSONObject)soundObj);
+			}
 		} catch (Exception e) {
 			plugin.getLogger().log(Level.WARNING, "Failed to load settings for player " + player.getUniqueId(), e);
 			player.sendMessage(plugin.getDescription().getName() + ": Failed to load settings. More details logged on server.");
