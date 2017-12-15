@@ -26,7 +26,7 @@ public class PlayerSettings {
 				break;
 			}
 		}
-		Load();
+		load();
 	}
 
 	public boolean getIsEnabled() {
@@ -35,7 +35,7 @@ public class PlayerSettings {
 	
 	public void setIsEnabled(boolean value) {
 		isEnabled = value;
-		Save();
+		save();
 	}
 	
 	public boolean getAutoGenerateNicknames() {
@@ -44,7 +44,7 @@ public class PlayerSettings {
 	
 	public void setAutoGenerateNicknames(boolean value) {
 		autoGenerateNicknames = value;
-		Save();
+		save();
 	}
 	
 	public String getNameUsedByThisPlugin() {
@@ -77,12 +77,36 @@ public class PlayerSettings {
 		if (!possibleMentions.parallelStream().anyMatch(pm -> names.contains(pm))) {
 			return;
 		}
+		
+		playSound();
+	}
+	
+	public boolean soundIsCustomized() {
+		return customSound != null;
+	}
+	
+	public boolean canCustomizeSound() {
+		// TODO: use spigot permissions, default true
+	}
+	
+	public SoundSettings getEffectiveSound() {
+		return
+				soundIsCustomized() ? customSound : // Custom sound defined by player
+			    // TODO: Serverwide default sound
+				new SoundSettings(); // Plugin default sound
+	}
+	
+	public void playSound() {
+		getEffectiveSound().play(player);
+	}
 
-		SoundSettings soundToPlay =
-			customSound != null ? customSound : // Custom sound defined by player
-		    // TODO: Serverwide default sound
-			new SoundSettings(); // Plugin default sound
-		soundToPlay.play(player);
+	public void setCustomSound(SoundSettings sound) {
+		customSound = sound;
+		save();
+	}
+	
+	public void resetCustomSound() {
+		setCustomSound(null);
 	}
 	
 	public String getIsEnabledAdjective() {
@@ -98,7 +122,7 @@ public class PlayerSettings {
 	private static final String AutoGenerateNicknamesTag = "AutoGenerateNicknames";
 	private static final String CustomSoundTag = "CustomSound";
 
-	private void Save() {
+	private void save() {
         JSONObject jsonObj = new JSONObject();
         jsonObj.put(PluginVersionTag, plugin.getDescription().getVersion()); // just in case future versions need it
         jsonObj.put(IsEnabledTag, isEnabled);
@@ -116,7 +140,7 @@ public class PlayerSettings {
 		}
 	}
 	
-	private void Load() {
+	private void load() {
 		try {
 			String jsonStr = plugin.getConfig().getString(getConfigPath());
 			if (jsonStr == null) {

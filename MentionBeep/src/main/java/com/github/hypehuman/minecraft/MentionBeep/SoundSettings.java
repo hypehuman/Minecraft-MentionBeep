@@ -20,7 +20,7 @@ public class SoundSettings {
 		player.playSound(player.getLocation(), sound, volume, pitch);
 	}
 	
-	private boolean setSound(Object input) {
+	public boolean setSound(Object input) {
 		Sound parsed;
 		try {
 			parsed = Sound.valueOf((String)input);
@@ -32,7 +32,7 @@ public class SoundSettings {
 		return true;
 	}
 	
-	private boolean setVolume(Object input) {
+	public boolean setVolume(Object input) {
 		float parsed;
 		try {
 			parsed = Float.valueOf((String)input);
@@ -47,7 +47,7 @@ public class SoundSettings {
 		return true;
 	}
 	
-	private boolean setPitch(Object input) {
+	public boolean setPitch(Object input) {
 		float parsed;
 		try {
 			parsed = Float.valueOf((String)input);
@@ -60,6 +60,11 @@ public class SoundSettings {
 		}
 		pitch = parsed;
 		return true;
+	}
+	
+	@Override
+	public String toString() {
+		return sound.name() + " " + volume + " " + pitch;
 	}
 
 	private static final String SoundTag = "Sound";
